@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView timer ;
     private int counter=0;
     private Thread counterThread;
-
+//first update
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
