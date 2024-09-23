@@ -13,10 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    private Button start,stop;
+    private Button start,stop,restart;
     private TextView timer ;
-    private int counter=0;
+    private int counter=0,minutes=0;
     private Thread counterThread;
+    private boolean click=true;
 //first update
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,28 +26,45 @@ public class MainActivity extends AppCompatActivity {
         start=findViewById(R.id.buttonStart);
         stop=findViewById(R.id.buttonStop);
         timer=findViewById(R.id.textView);
+        restart=findViewById(R.id.buttonRestart);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                counterThread=new Thread(()-> {
-                    try {
-                        while (true) {
-                            counter++;
-                            timer.setText(counter+"");
-                            Thread.sleep(1000);
+                if(click){
+                    click=false;
+                    counterThread=new Thread(()-> {
+                        try {
+                            while (true) {
+                                counter++;
+                                if(counter==60){
+                                    counter=0;
+                                    minutes++;
+                                }
+                                timer.setText(minutes+":"+counter);
+                                Thread.sleep(1000);
+                            }
                         }
-                    }
-                    catch (Exception e) {
+                        catch (Exception e) {
 
-                    }
-                });
-                counterThread.start();
+                        }
+                    });
+                    counterThread.start();
+                }
             }
         });
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 counterThread.interrupt();
+                click=true;
+            }
+        });
+        restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counter=0;
+                minutes=0;
+                timer.setText(minutes+":"+counter);
             }
         });
     }
